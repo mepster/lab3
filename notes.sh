@@ -44,7 +44,7 @@ JU=jupyter-user2 ; WD=/home/$JU ; docker exec --user $JU -w $WD -it tljh-dev /bi
 # reset all users' WD repos
 # on laptop
 #export CMD="git clone https://github.com/mepster/lab3.git"
-export CMD="git checkout -f ; git pull ; git checkout -f"
+export CMD="git checkout -f ; git pull ; git checkout -f ; rm -f run.*"
 export WD="lab3"
 for id in admin $(seq 1 10); do
     if [ "$id" = "admin" ]; then
@@ -60,10 +60,11 @@ done
 # on laptop
 #export CMD="ls"
 #export CMD="/opt/miniforge3/bin/conda env list"
-export CMD="git checkout -f ; git pull ; git checkout -f"
+export CMD="git checkout -f ; git pull ; git checkout -f ; rm -f run.*"
 export WD="lab3"
 for id in admin $(seq 1 10); do
     if [ "$id" = "admin" ]; then
+
         JU="jupyter-admin"
     else
         JU="jupyter-user${id}"
