@@ -24,8 +24,8 @@ chgrp -R $JU /home/$JU
 ---
 
 # login as root, or a user
-#JU=root ; WD=/root ; docker exec --user $JU -w $WD -it tljh-dev /bin/bash
-JU=jupyter-user1 ; WD=/home/$JU ; docker exec --user $JU -w $WD -it tljh-dev /bin/bash
+JU=root ; WD=/root ; docker exec --user $JU -w $WD -it tljh-dev /bin/bash
+JU=jupyter-user2 ; WD=/home/$JU ; docker exec --user $JU -w $WD -it tljh-dev /bin/bash
 
 # # set up user directories on tljh as root
 # JU=root ; WD=/root ; docker exec --user $JU -w $WD -it tljh-dev /bin/bash
@@ -41,9 +41,11 @@ JU=jupyter-user1 ; WD=/home/$JU ; docker exec --user $JU -w $WD -it tljh-dev /bi
 #     i=$((i+1))
 #     done
 
-# reset all users' evosim repos
+# reset all users' WD repos
 # on laptop
+#export CMD="git clone https://github.com/mepster/lab3.git"
 export CMD="git pull ; git checkout -f"
+export WD="lab3"
 for id in admin $(seq 1 10); do
     if [ "$id" = "admin" ]; then
         JU="jupyter-admin"
@@ -51,7 +53,7 @@ for id in admin $(seq 1 10); do
         JU="jupyter-user${id}"
     fi
     echo "$JU"
-    docker exec --user "$JU" -it -w "/home/$JU/evosim" tljh-dev /bin/bash -exec "$CMD"
+    docker exec --user "$JU" -it -w "/home/$JU/$WD" tljh-dev /bin/bash -exec "$CMD"
 done
 
 # run any CMD as each user
@@ -59,6 +61,7 @@ done
 #export CMD="ls"
 #export CMD="/opt/miniforge3/bin/conda env list"
 export CMD="git checkout -f ; git pull ; git checkout -f"
+export WD="lab3"
 for id in admin $(seq 1 10); do
     if [ "$id" = "admin" ]; then
         JU="jupyter-admin"
@@ -66,5 +69,5 @@ for id in admin $(seq 1 10); do
         JU="jupyter-user${id}"
     fi
     echo "$JU"
-    docker exec --user "$JU" -it -w "/home/$JU/evosim" tljh-dev /bin/bash -exec "$CMD"
+    docker exec --user "$JU" -it -w "/home/$JU/$WU" tljh-dev /bin/bash -exec "$CMD"
 done
