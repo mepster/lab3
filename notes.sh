@@ -47,6 +47,7 @@ JU=jupyter-user2 ; WD=/home/$JU ; docker exec --user $JU -w $WD -it tljh-dev /bi
 
 #export CMD="cat ../jupyter-admin/for-conda >> .bashrc "
 #export CMD="git clone https://github.com/mepster/lab3.git"
+export CMD="git clone https://github.com/mepster/evosim.git"
 for id in admin $(seq 1 5); do
     if [ "$id" = "admin" ]; then
         JU="jupyter-admin"
