@@ -23,10 +23,39 @@ chgrp -R $JU /home/$JU
 
 ---
 
+Install conda in /usr/local/anaconda3.
+conda create -n evosim python=3.9
+conda activate evosim
+conda install pandas scipy numpy tqdm svgwrite matplotlib termcolor
+chgrp conda -R /usr/local/anaconda3/
+
+# add evosim kernel to jupyter kernels
+# manually log in to docker (with below) and run as each user:
+conda run -n evosim python -m ipykernel install --user --name=evosim
+
+git clone https://github.com/mepster/latticeproteins.git
+pip install -e latticeproteins
+cd latticeproteins
+git checkout mep
+cd ..
+
 # login as root, or a user
 JU=root ; WD=/root ; docker exec --user $JU -w $WD -it tljh-dev /bin/bash
+JU=jupyter-admin ; WD=/home/$JU ; docker exec --user $JU -w $WD -it tljh-dev /bin/bash
 JU=jupyter-user2 ; WD=/home/$JU ; docker exec --user $JU -w $WD -it tljh-dev /bin/bash
 
+
+#export CMD="cat ../jupyter-admin/for-conda >> .bashrc "
+#export CMD="git clone https://github.com/mepster/lab3.git"
+for id in admin $(seq 1 5); do
+    if [ "$id" = "admin" ]; then
+        JU="jupyter-admin"
+    else
+        JU="jupyter-user${id}"
+    fi
+    echo "$JU"
+    docker exec --user "$JU" -it -w "/home/$JU" tljh-dev /bin/bash -exec "$CMD"
+done
 # # set up user directories on tljh as root
 # JU=root ; WD=/root ; docker exec --user $JU -w $WD -it tljh-dev /bin/bash
 # # now on docker
@@ -46,7 +75,7 @@ JU=jupyter-user2 ; WD=/home/$JU ; docker exec --user $JU -w $WD -it tljh-dev /bi
 #export CMD="git clone https://github.com/mepster/lab3.git"
 export CMD="git checkout -f ; git pull ; git checkout -f ; rm -f run.*"
 export WD="lab3"
-for id in admin $(seq 1 10); do
+for id in admin $(seq 1 5); do
     if [ "$id" = "admin" ]; then
         JU="jupyter-admin"
     else
@@ -62,7 +91,7 @@ done
 #export CMD="/opt/miniforge3/bin/conda env list"
 export CMD="git checkout -f ; git pull ; git checkout -f ; rm -f run.*"
 export WD="lab3"
-for id in admin $(seq 1 10); do
+for id in admin $(seq 1 5); do
     if [ "$id" = "admin" ]; then
 
         JU="jupyter-admin"
